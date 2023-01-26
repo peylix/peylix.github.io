@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Tower of Hanoi" />
+<meta property="og:description" content="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 def towerOfHanoi(disks, initial, transfer, target): if disks == 1: print(&#34;Move disk&#34;, disks, &#34;from tower&#34;, initial, &#34;to tower&#34;, target) return towerOfHanoi(disks - 1, initial, target, transfer) print(&#34;Move disk&#34;, disks, &#34;from tower&#34;, initial, &#34;to tower&#34;, target) towerOfHanoi(disks - 1, transfer, initial, target) disks = int(input(&#34;Give me your number of disks: &#34;)) towerOfHanoi(disks, &#34;A&#34;, &#34;B&#34;, &#34;C&#34;) The key to the Tower of Hanoi algorithm and any recursion like that is that the function is expected to call itself, which means the same function is also within the function." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://peylix.github.io/posts/tower-of-hanoi/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-01-26T21:57:19+08:00" />
+<meta property="article:modified_time" content="2023-01-26T21:57:19+08:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tower of Hanoi"/>
+<meta name="twitter:description" content="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 def towerOfHanoi(disks, initial, transfer, target): if disks == 1: print(&#34;Move disk&#34;, disks, &#34;from tower&#34;, initial, &#34;to tower&#34;, target) return towerOfHanoi(disks - 1, initial, target, transfer) print(&#34;Move disk&#34;, disks, &#34;from tower&#34;, initial, &#34;to tower&#34;, target) towerOfHanoi(disks - 1, transfer, initial, target) disks = int(input(&#34;Give me your number of disks: &#34;)) towerOfHanoi(disks, &#34;A&#34;, &#34;B&#34;, &#34;C&#34;) The key to the Tower of Hanoi algorithm and any recursion like that is that the function is expected to call itself, which means the same function is also within the function."/>
+
+  
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
+  <title>
+    
+    Peylix Blog - Tower of Hanoi
+    
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  
+  
+  <link rel="stylesheet" href="/minima.1674741643.css">
+  
+  
+  <script defer type="text/javascript" src="/minima.1674741643.js"></script>
+  
+</head>
+<script>
+  
+  let default_theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+  try {
+    const local = localStorage.getItem('theme')
+    if (local) {
+      default_theme = local
+    }
+    localStorage.setItem('theme', default_theme);
+    window.minima_theme = default_theme;
+    document.querySelector('html').classList.add(default_theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+
+<body>
+  <header class="mt-3 mb-6">
+  <div class="container mx-auto">
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center">
+        
+        <div id="theme-switch" class="text-3xl cursor-pointer">🤗</div>
+      </div>
+      <ul class="flex items-center font-medium
+        whitespace-nowrap overflow-x-auto overflow-y-hidden">
+        
+        <li class="ml-1 mr-1"><a href="/categories">Categories</a></li>
+        
+        <li class="ml-1 mr-1"><a href="/tags">Tags</a></li>
+        
+        <li class="ml-1 mr-1"><a href="/about">About</a></li>
+        
+      </ul>
+      <ul class="flex item-center text-sm font-bold">
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  
+<div class="container mx-auto">
+  <h1 class="text-4xl font-extrabold mt-6 mb-6">Tower of Hanoi</h1>
+  <div class="mb-3 text-sm flex justify-between ">
+    <div>
+      
+      Post at &mdash; Jan 26, 2023
+      
+      
+    </div>
+    
+    <div>
+      
+      
+      <a class="ml-1" href="/tags/programming">#programming</a>
+      
+      
+      <a class="ml-1" href="/tags/python">#python</a>
+      
+      
+      <a class="ml-1" href="/tags/algorithm">#algorithm</a>
+      
+    </div>
+    
+  </div>
+  <main class="mb-8">
+    <p></p>
+    <article class="md">
+      <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">towerOfHanoi</span><span class="p">(</span><span class="n">disks</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">transfer</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="n">disks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Move disk&#34;</span><span class="p">,</span> <span class="n">disks</span><span class="p">,</span> <span class="s2">&#34;from tower&#34;</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="s2">&#34;to tower&#34;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">towerOfHanoi</span><span class="p">(</span><span class="n">disks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">transfer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Move disk&#34;</span><span class="p">,</span> <span class="n">disks</span><span class="p">,</span> <span class="s2">&#34;from tower&#34;</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="s2">&#34;to tower&#34;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">towerOfHanoi</span><span class="p">(</span><span class="n">disks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">transfer</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">disks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&#34;Give me your number of disks: &#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">towerOfHanoi</span><span class="p">(</span><span class="n">disks</span><span class="p">,</span> <span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="s2">&#34;C&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The key to the Tower of Hanoi algorithm and any recursion like that is that the function is expected to call itself, which means the same function is also within the function. In logic, this means when the computer execute this piece of code and meet the recursion part, it will execute the &ldquo;sub-part of the function&rdquo;.</p>
+<p>In line 5 in this piece of code, we let the first variable be &ldquo;disks - 1&rdquo;. It its extremely important. With this, the program will continuely execute the code above untill it reach the condition where &ldquo;disks == 1&rdquo; which is the end point of the Hanoi function.</p>
+<p>Besides, changing the order of variables is also important. It can easily conduct the action of moving a disk from one tower to another. The alteration only happened to the &ldquo;name&rdquo; of the variables. **This is because we were not assigning the value A, B and C to the variables, but were only linking them to the &ldquo;position&rdquo; of the variables.  When the order (or &ldquo;position&rdquo;) of these variables changed, for example, from</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">towerOfHanoi</span><span class="p">(</span><span class="n">disks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">transfer</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>to</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">towerOfHanoi</span><span class="p">(</span><span class="n">disks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">transfer</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>the value A, B and C will be linked to the new order of  variables, like from</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">initial</span> <span class="o">=</span> <span class="s2">&#34;A&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">target</span> <span class="o">=</span> <span class="s2">&#34;B&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">transfer</span> <span class="o">=</span> <span class="s2">&#34;C&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>to</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">transfer</span> <span class="o">=</span> <span class="s2">&#34;A&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">initial</span> <span class="o">=</span> <span class="s2">&#34;B&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">target</span> <span class="o">=</span> <span class="s2">&#34;C&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="this-is-simple-dont-get-confused-by-it">This is simple. Don&rsquo;t get confused by it!</h3>
+<p><strong>Thus, the key is to change the target variable a little bit so that the program can go back and do it again.</strong> <em>Considering this feature of recursion, I think it may can serve as an advanced version of loop.</em></p>
+<p>In addition, don&rsquo;t forget to set an end point! Otherwise the program will be trapped in a loop that will never end!</p>
+<p>However, what is more important is the idea that simplifying the tower of Hanoi problem so that it can be express by a small piece of code.</p>
+
+    </article>
+  </main>
+  
+
+
+
+
+
+<div id="comment"></div>
+
+
+
+
+<script>
+    const s = document.createElement("script")
+    s.src = "https://giscus.app/client.js"
+    s.crossOrigin = "anonymous"
+    s.async = true
+    s.setAttribute("data-repo", "mivinci\/hugo-theme-minima")
+    s.setAttribute("data-repo-id", "MDEwOlJlcG9zaXRvcnkzODcxMjM2NDU=")
+    s.setAttribute("data-category", "Comments")
+    s.setAttribute("data-category-id", "DIC_kwDOFxMJvc4CScQm")
+    s.setAttribute("data-mapping", "pathname")
+    s.setAttribute("data-strict", "0")
+    s.setAttribute("data-reactions-enabled", "1")
+    s.setAttribute("data-emit-metadata", "0")
+    s.setAttribute("data-input-position", "buttom")
+    s.setAttribute("data-theme", window.minima_theme + "_protanopia")
+    s.setAttribute("data-lang", "en")
+    s.setAttribute("data-loading", "lazy")
+    document.getElementById("comment").appendChild(s)
+</script>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+  <footer class="mt-8 mb-8">
+  <div class="container mx-auto">
+    <div class="mt-8 flex justify-between items-center">
+      <p class="mt-0 text-sm">
+        © 2023 |
+        <a href="https://gohugo.io" target="_blank" rel="noopener noreferrer">Hugo</a> on
+        <a href="https://github.com/mivinci/hugo-theme-minima" target="_blank" rel="noopener noreferrer">Minima</a>
+      </p>
+      <p class="flex items-center mt-0">
+        
+          <a class="icon ml-1 mr-1" href="lisichen_2901@outlook.com" title="email">
+          
+            <svg fill="#63636f" width="22" height="22" viewBox="0 0 24 24"><path d="M3 3h18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm9.06 8.683L5.648 6.238L4.353 7.762l7.72 6.555l7.581-6.56l-1.308-1.513l-6.285 5.439z"/></svg>
+          
+          </a>
+        
+          <a class="icon ml-1 mr-1" href="https://github.com/Peylix" title="github">
+          
+            <svg fill="#63636f" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          
+          </a>
+        
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
