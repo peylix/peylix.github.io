@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Peylix Blog</title>
-    <link>https://peylix.github.io/</link>
-    <description>Recent content on Peylix Blog</description>
+    <title>Articles on Peylix Blog</title>
+    <link>https://peylix.github.io/categories/articles/</link>
+    <description>Recent content in Articles on Peylix Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2023</copyright>
-    <lastBuildDate>Thu, 26 Jan 2023 02:12:51 +0800</lastBuildDate><atom:link href="https://peylix.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>About</title>
-      <link>https://peylix.github.io/about/</link>
-      <pubDate>Thu, 26 Jan 2023 21:40:36 +0800</pubDate>
-      
-      <guid>https://peylix.github.io/about/</guid>
-      <description>I can be called Peylix.
-Yet to be done</description>
-    </item>
-    
+    <lastBuildDate>Thu, 26 Jan 2023 02:12:51 +0800</lastBuildDate><atom:link href="https://peylix.github.io/categories/articles/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>论表演</title>
       <link>https://peylix.github.io/posts/on-acting/</link>
@@ -27,15 +17,6 @@ Yet to be done</description>
       <description>在难以表达自我的情况下，表演让我们更像我们。 表演是对某些已知情节的呈现的过程。这一定义表明，表演天生具有一种性质，即「表演者」和「观众」同时承认的表演的虚假性。当一个人在表演的时候，他和他的观众都清楚地知道，他「在表演」——他所有的行为不是出于他自己的观点和态度，而是出于他所扮演的角色的所思所想。通过表演，表演者变成了角色的容器，其本身则可以被认为失去了立场和观点；在这样一个情境下，对表演者的指责往往会更容易失效，因为这些指责都可以被转化成对他所表演的角色的指责，而他本身唯一可能出现的问题，就仅限于演得不好了。在这种情况下，甚至大他者的凝视也会失去效力，因为表演者本身在舞台上退场了，台上的仅仅只是角色而已。
 对于以上所描述的过程，有一个很好的例证，便是如今流行于中文互联网上部分地方的「抽象文化」，尤其是流行于评论区或社区中的基于文字的抽象文化。抽象文化，尤其是基于文字的那种，其措辞往往是超出「社会规范」，以至于超逻辑的。事实上，抽象文化的观众很明白自己在看的并不是对方真正的态度，因为在进行这种抽象文化的表演的时候，表演者和观众就已经明晰彼此处在「表演关系」中了。由于对这一点的明确，抽象文化的表演者，往往可以更轻松地表达出更接近自己真诚观点的语句而不必担心其副作用。这有些类似于「开玩笑」，不过整个氛围要比简单的开玩笑更为沉浸式。
 然而，这就又引出了一个问题，在上述情景中，通过表演，表演者反而从角色跳转回了其本身，也就是说，「表演」让表演者更容易地去表达自己了。这是一个非常矛盾的发现——很显然，表演本身应该是让表演者隐藏起自身的才对。为了解释这种逻辑上的冲突，有必要引入这些抽象文化的表演者所处的「社会框架」。在这里，我们可以简要地把「社会框架」解释成由社会的政治体制、法律、制度、文化习俗等等因素所构成的集合。现如今的社会框架几乎都是基于某种资本主义的，但其「底色」则各不相同。中国的框架的底色，即便不同地区由于经济和文化的区别而有所不同，从总体上看，往往还是会更加趋于内倾，并不支持完整的自我表达。这既是文化所致，也是政治实践所致。这样一来，表达自己往往会显得更有风险。而许多人对自我表述的需求并没有随之消失。甚至说，这种需求随着各种社会压力——无论是政治上的、经济上的，还是文化上的——的加剧而更加迫切了。反过来，恐怕也可以用上述的现象来证明这一点。二者之间的矛盾，就可以通过上述的抽象文化的表演来暂时地得到调和。借由表演，表演者可以躲过大他者的目光，不必维持不必要的假象，而更加自由地表述其内容。不过，需要注意的是，这一过程本身，可能是表演者所注意不到的——并非一定是表演者通过这种环境来隐晦地表达内容，而也更可能是在这种环境中，许多表演者可以不自觉地表露出自己所真实地持有的不受框架容许的内容。这种抽象文化的环境也通过这种形式来保护了其表演者，同样，抽象文化也因此而变得更加具有某种活力。甚至可以说，只要上述的矛盾没有真的消失，抽象文化，或者其类似品，就总是会被需要的。</description>
-    </item>
-    
-    <item>
-      <title>My First Post</title>
-      <link>https://peylix.github.io/posts/my-first-post/</link>
-      <pubDate>Wed, 25 Jan 2023 23:59:59 +0800</pubDate>
-      
-      <guid>https://peylix.github.io/posts/my-first-post/</guid>
-      <description>Hello, This World!! This is a message used to test if the blog works. </description>
     </item>
     
   </channel>
