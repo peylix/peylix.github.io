@@ -50,9 +50,9 @@ const projects = [
     description: "A comprehensive online learning platform for young people from underserved regions. The platform includes three major parts: a RAG-based AI system for education, an online course delivery system, and a forum for learners to discuss.",
     tags: ["Next.js", "React", "Flask", "LangChain", "FAISS", "PostgreSQL", "Celery", "Amazon S3"],
     links: {
-      github: "https://github.com/Group2-MountOlympus-FYP/Prometheus.EDU"
+      github: "https://github.com/Group2-MountOlympus-FYP/Prometheus.EDU",
     },
-    feature: true
+    featured: true
   },
   {
     id: 2,
@@ -74,7 +74,7 @@ const projects = [
       github: "#",
       demo: "#"
     },
-    featured: true
+    featured: false
   },
   {
     id: 4,
