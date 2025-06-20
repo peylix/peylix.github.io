@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {IconBrandGithub, IconBrandLinkedin, IconFile, IconBrandGoogle, IconMail, IconExternalLink, IconCalendar, IconMapPin, IconBuildings, IconSelect} from '@tabler/icons-react';
+import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect} from '@tabler/icons-react';
 
 // Profile data
 const profileData = {
@@ -17,31 +17,31 @@ const profileData = {
   }
 };
 
-const publications = [
-  {
-    id: 1,
-    title: "EmoSense: A Hybrid CNN-RAG Framework for FER-Based Facial Emotion Analysis and Mental Health Support",
-    authors: "Sichen Li, et al.",
-    venue: "IEEE International Conference on Image Processing (ICIP)",
-    year: "2025",
-    type: "conference",
-    links: {
-      paper: "#",
-      status: "Submitted"
-    }
-  },
-  {
-    id: 2,
-    title: "An intelligent imposition method for card printing",
-    authors: "Sichen Li, et al.",
-    venue: "China National Intellectual Property Administration",
-    year: "2024",
-    type: "patent",
-    links: {
-      patent: "CN 118036814 A"
-    }
-  }
-];
+// const publications = [
+//   {
+//     id: 1,
+//     title: "EmoSense: A Hybrid CNN-RAG Framework for FER-Based Facial Emotion Analysis and Mental Health Support",
+//     authors: "Sichen Li, et al.",
+//     venue: "IEEE International Conference on Image Processing (ICIP)",
+//     year: "2025",
+//     type: "conference",
+//     links: {
+//       paper: "#",
+//       status: "Submitted"
+//     }
+//   },
+//   {
+//     id: 2,
+//     title: "An intelligent imposition method for card printing",
+//     authors: "Sichen Li, et al.",
+//     venue: "China National Intellectual Property Administration",
+//     year: "2024",
+//     type: "patent",
+//     links: {
+//       patent: "CN 118036814 A"
+//     }
+//   }
+// ];
 
 const projects = [
   {
@@ -132,7 +132,7 @@ export default function Portfolio() {
 
   const sections = ['about', 'publications', 'projects', 'experience', 'awards'];
 
-  const scrollToSection = (section) => {
+  const scrollToSection = (section: string) => {
     setActiveSection(section);
     document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
   };

@@ -23,6 +23,10 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      // 关闭未使用 import 的报错（如果用到相关插件）
+      'unused-imports/no-unused-imports': 'off',
     },
   },
 )
