@@ -130,7 +130,8 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('about');
   const [showAllProjects, setShowAllProjects] = useState(false);
 
-  const sections = ['about', 'publications', 'projects', 'experience', 'awards'];
+  // const sections = ['about', 'publications', 'projects', 'experience', 'awards'];
+  const sections = ['about', 'projects', 'experience', 'awards'];
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
