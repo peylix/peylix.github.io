@@ -1,137 +1,19 @@
 import { useState } from 'react';
 import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect} from '@tabler/icons-react';
-
-// Profile data
-const profileData = {
-  name: "Sichen (Peylix) Li",
-  title: "Software Engineering Student",
-  institution: "Beijing University of Technology & University College Dublin",
-  location: "Beijing, China",
-  email: "sichen.li2003@gmail.com",
-  bio: "I am a dual-degree software engineering student and AI researcher passionate about Large Language Models, Retrieval-Augmented Generation, and AI4Health. My work focuses on developing innovative AI-driven solutions for real-world problems, from mental health support systems to carbon trading consultation platforms. You can also call me Peylix.",
-  avatar: "/avatar.jpg",
-  social: {
-    github: "https://github.com/peylix",
-    linkedin: "https://www.linkedin.com/in/sichen-li-2b349a2a0/",
-    // googleScholar: "https://scholar.google.com/citations?user=USERID"
-  }
-};
-
-// const publications = [
-//   {
-//     id: 1,
-//     title: "EmoSense: A Hybrid CNN-RAG Framework for FER-Based Facial Emotion Analysis and Mental Health Support",
-//     authors: "Sichen Li, et al.",
-//     venue: "IEEE International Conference on Image Processing (ICIP)",
-//     year: "2025",
-//     type: "conference",
-//     links: {
-//       paper: "#",
-//       status: "Submitted"
-//     }
-//   },
-//   {
-//     id: 2,
-//     title: "An intelligent imposition method for card printing",
-//     authors: "Sichen Li, et al.",
-//     venue: "China National Intellectual Property Administration",
-//     year: "2024",
-//     type: "patent",
-//     links: {
-//       patent: "CN 118036814 A"
-//     }
-//   }
-// ];
-
-const projects = [
-  {
-    id: 1,
-    title: "Prometheus.EDU: Igniting the Flame of Knowledge for the Underserved (Degree Project)",
-    description: "A comprehensive online learning platform for young people from underserved regions. The platform includes three major parts: a RAG-based AI system for education, an online course delivery system, and a forum for learners to discuss.",
-    tags: ["Next.js", "React", "Flask", "LangChain", "FAISS", "PostgreSQL", "Celery", "Amazon S3"],
-    links: {
-      github: "https://github.com/Group2-MountOlympus-FYP/Prometheus.EDU",
-    },
-    featured: true
-  },
-  {
-    id: 2,
-    title: "CardioRAG: Your AI Heart Health Advisor",
-    description: "An AI-powered cardiovascular disease consultation assistant providing comprehensive services including disease knowledge, test result interpretation, and medication guidance. Won Datawhale Excellence Award (Top 10%).",
-    tags: ["LangChain", "Streamlit", "RAG", "Python"],
-    links: {
-      github: "https://github.com/peylix/CardioRAG",
-      demo: "#"
-    },
-    featured: true
-  },
-  {
-    id: 3,
-    title: "LoyalLens: A Second Pair of Eyes for the Visually Impaired",
-    description: "Android application utilizing multi-modal large language models to assist visually impaired people. Led a team of 5 using Scrum methodology, integrated GPT-4 Vision with custom prompt engineering.",
-    tags: ["Kotlin", "Jetpack Compose", "GPT-4 Vision", "Android"],
-    links: {
-      github: "#",
-      demo: "#"
-    },
-    featured: false
-  },
-  {
-    id: 4,
-    title: "Intelligent Panel Optimization System",
-    description: "Built for Goldpac Group, implemented front-end service using Vue.js and FastAPI. Contributed to genetic algorithm design and RESTful APIs.",
-    tags: ["Vue.js", "FastAPI", "ArcoDesign"],
-    links: {
-      github: "#"
-    },
-    featured: false
-  }
-];
-
-const experience = [
-  {
-    id: 1,
-    title: "Lead AI Engineer",
-    organization: "Carbon Era",
-    period: "October 2024 - Present",
-    description: "Leading AI-driven services development including Graph-based RAG chatbot and carbon neutrality report generation. Co-developing web front-end with React/Next.js and implementing CI/CD pipelines."
-  },
-  {
-    id: 2,
-    title: "Research Assistant",
-    organization: "University College Dublin",
-    period: "December 2024 - February 2025",
-    description: "Designed and implemented RAG-based mental health report generation module with CNN-based facial emotion recognition. Enhanced RAG pipeline with LLM preprocessing techniques."
-  },
-  {
-    id: 3,
-    title: "Undergraduate Researcher",
-    organization: "Beijing University of Technology",
-    period: "January 2024 - Present",
-    description: "Co-designing LLM-based fuzzing framework for deep learning libraries. Developing error-triggering data collection, automatic labeling, and differential testing methods."
-  },
-  {
-    id: 4,
-    title: "Product Assistant Intern",
-    organization: "Beijing Urban Construction Intelligent Control Co., Ltd.",
-    period: "July 2024 - October 2024",
-    description: "Conducted technical research on low-code platforms and big data processing. Contributed to RAG project for enhancing LLM generation accuracy."
-  },
-  {
-    id: 5,
-    title: "Undergraduate Teaching Assistant",
-    organization: "Beijing-Dublin International College, BJUT",
-    period: "March 2024 - June 2025",
-    description: "TA for Data Structures & Algorithms II, Database Systems, Object-Oriented Design, and Software Engineering Project courses."
-  }
-];
+import { profileData } from './data/profile';
+import { publications } from './data/publications';
+import { projects } from './data/projects';
+import { experience } from './data/experience';
+import { awards } from './data/awards';
+import { getEnabledSections } from './data/config';
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('about');
   const [showAllProjects, setShowAllProjects] = useState(false);
 
-  // const sections = ['about', 'publications', 'projects', 'experience', 'awards'];
-  const sections = ['about', 'projects', 'experience', 'awards'];
+  // Get only enabled sections from config
+  const sections = getEnabledSections();
+
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
@@ -228,75 +110,80 @@ export default function Portfolio() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">About</h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-            {profileData.bio}
-          </p>
-        </div>
-      </section>
+      {sections.includes('about') && (
+        <section id="about" className="py-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">About</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+              {profileData.bio}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Publications Section */}
-      {/* <section id="publications" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50"> */}
-      {/*   <div className="max-w-4xl mx-auto"> */}
-      {/*     <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Publications</h2> */}
-      {/*     <div className="space-y-6"> */}
-      {/*       {publications.map((pub) => ( */}
-      {/*         <div */}
-      {/*           key={pub.id} */}
-      {/*           className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow" */}
-      {/*         > */}
-      {/*           <div className="flex items-start justify-between gap-4"> */}
-      {/*             <div className="flex-1"> */}
-      {/*               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2"> */}
-      {/*                 {pub.title} */}
-      {/*               </h3> */}
-      {/*               <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{pub.authors}</p> */}
-      {/*               <p className="text-sm text-slate-500 dark:text-slate-500"> */}
-      {/*                 <span className="font-medium">{pub.venue}</span> • {pub.year} */}
-      {/*               </p> */}
-      {/*             </div> */}
-      {/*             <span */}
-      {/*               className={`px-3 py-1 text-xs font-medium rounded-full ${ */}
-      {/*                 pub.type === 'journal' */}
-      {/*                   ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' */}
-      {/*                   : pub.type === 'patent' */}
-      {/*                   ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' */}
-      {/*                   : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' */}
-      {/*               }`} */}
-      {/*             > */}
-      {/*               {pub.type} */}
-      {/*             </span> */}
-      {/*           </div> */}
-      {/*           <div className="flex gap-4 mt-4"> */}
-      {/*             {Object.entries(pub.links).map(([key, url]) => ( */}
-      {/*               <a */}
-      {/*                 key={key} */}
-      {/*                 href={url} */}
-      {/*                 className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline" */}
-      {/*               > */}
-      {/*                 <IconExternalLink className="w-3 h-3" /> */}
-      {/*                 {key.charAt(0).toUpperCase() + key.slice(1)} */}
-      {/*               </a> */}
-      {/*             ))} */}
-      {/*           </div> */}
-      {/*         </div> */}
-      {/*       ))} */}
-      {/*     </div> */}
-      {/*   </div> */}
-      {/* </section> */}
+      {sections.includes('publicatins') && (
+      <section id="publications" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Publications</h2>
+          <div className="space-y-6">
+            {publications.map((pub, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                      {pub.title}
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{pub.authors}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500">
+                      <span className="font-medium">{pub.venue}</span> • {pub.year}
+                    </p>
+                  </div>
+                  <span
+                    className={`px-3 py-1 text-xs font-medium rounded-full ${
+                      pub.type === 'journal'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        : pub.type === 'patent'
+                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                    }`}
+                  >
+                    {pub.type}
+                  </span>
+                </div>
+                <div className="flex gap-4 mt-4">
+                  {Object.entries(pub.links).map(([key, url]) => (
+                    <a
+                      key={key}
+                      href={url}
+                      className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      <IconExternalLink className="w-3 h-3" />
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
 
       {/* Projects Section */}
+      {sections.includes('projects') && (
       <section id="projects" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Projects</h2>
           <div className="grid gap-6 mb-6">
             {projects
               .filter((project) => showAllProjects || project.featured)
-              .map((project) => (
+              .map((project, index) => (
                 <div
-                  key={project.id}
+                  key={index}
                   className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between gap-4 mb-4">
@@ -346,14 +233,16 @@ export default function Portfolio() {
           )}
         </div>
       </section>
+      )}
 
       {/* Experience Section */}
+      {sections.includes('experience') && (
       <section id="experience" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Experience</h2>
           <div className="space-y-6">
-            {experience.map((exp) => (
-              <div key={exp.id} className="flex gap-4">
+            {experience.map((exp, index) => (
+              <div key={index} className="flex gap-4">
                 <div className="flex-shrink-0 w-3 h-3 mt-2 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
@@ -369,45 +258,26 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Awards Section */}
+      {sections.includes('awards') && (
       <section id="awards" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Awards & Achievements</h2>
           <div className="grid gap-4">
-            <div className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
-              <p className="text-slate-700 dark:text-slate-300">
-                <span className="font-medium">Academic Excellence Award</span> • Beijing University of Technology (2023-2024)
-              </p>
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
-              <p className="text-slate-700 dark:text-slate-300">
-                <span className="font-medium">Datawhale Excellence Award & Third Prize</span> • CardioRAG Project (Top 10%)
-              </p>
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
-              <p className="text-slate-700 dark:text-slate-300">
-                <span className="font-medium">Third Prize</span> • China Collegiate Computer Design Contest, Beijing Regional
-              </p>
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
-              <p className="text-slate-700 dark:text-slate-300">
-                <span className="font-medium">Third Prize</span> • 17th National College Student Software Innovation Competition
-              </p>
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
-              <p className="text-slate-700 dark:text-slate-300">
-                <span className="font-medium">Champion</span> • 7th BJUT "Dublin Cup" Joint English Debate Competition
-              </p>
-            </div>
+            {awards.map((award, index) => (
+              <div key={index} className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                <p className="text-slate-700 dark:text-slate-300">
+                  <span className="font-medium">{award.title}</span> • {award.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+      )}
 
       {/* Footer */}
       <footer className="py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800">
