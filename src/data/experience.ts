@@ -2,7 +2,13 @@ import type { Experience } from '../types';
 
 export const experience: Experience[] = [
   {
-    title: "Lead AI Engineer",
+    title: "Co-founder & Lead AI Engineer",
+    organization: "Shawarma Tech",
+    period: "August 2025 - Present",
+    description: "Co-founded a startup focused on AI-powered study abroad consulting services. Leading the development of AI-driven solutions to enhance user experience and streamline operations."
+  },
+  {
+    title: "AI Engineer",
     organization: "Carbon Era",
     period: "October 2024 - Present",
     description: "Leading AI-driven services development including Graph-based RAG chatbot and carbon neutrality report generation. Co-developing web front-end with React/Next.js and implementing CI/CD pipelines."
@@ -29,6 +35,6 @@ export const experience: Experience[] = [
     title: "Undergraduate Teaching Assistant",
     organization: "Beijing-Dublin International College, BJUT",
     period: "March 2024 - June 2025",
-    description: "TA for Data Structures & Algorithms II, Database Systems, Object-Oriented Design, and Software Engineering Project courses."
+    description: "TA for COMP2003J Data Structures & Algorithms II, COMP2004J Database Systems, COMP3013J Object-Oriented Design, COMP3030J Software Engineering Project, and COMP3033J Computer Graphics.."
   }
 ];
