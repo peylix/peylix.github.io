@@ -35,6 +35,6 @@ export const experience: Experience[] = [
     title: "Undergraduate Teaching Assistant",
     organization: "Beijing-Dublin International College, BJUT",
     period: "March 2024 - June 2025",
-    description: "TA for COMP2003J Data Structures & Algorithms II, COMP2004J Database Systems, COMP3013J Object-Oriented Design, COMP3030J Software Engineering Project, and COMP3033J Computer Graphics.."
+    description: "TA for COMP2003J Data Structures & Algorithms II, COMP2004J Database Systems, COMP3013J Object-Oriented Design, COMP3030J Software Engineering Project, and COMP3033J Computer Graphics."
   }
 ];

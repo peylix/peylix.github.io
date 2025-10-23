@@ -1,4 +1,4 @@
-# peylix.github.io
+# Personal Website
 
 This is the source code for my personal website hosted at [sichen.peylix.top](https://sichen.peylix.top/).
 

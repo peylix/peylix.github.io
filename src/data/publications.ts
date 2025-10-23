@@ -19,7 +19,7 @@ export const publications: Publication[] = [
     year: "2024",
     type: "patent",
     links: {
-      patent: "CN 118036814 A"
+      patent: "https://patents.google.com/patent/CN118036814A/en?oq=CN+118036814+A"
     }
   }
 ];

@@ -16,7 +16,7 @@ export const projects: Project[] = [
     tags: ["LangChain", "Streamlit", "RAG", "Python"],
     links: {
       github: "https://github.com/peylix/CardioRAG",
-      demo: "#"
+      // demo: "#"
     },
     featured: true
   },
@@ -26,7 +26,7 @@ export const projects: Project[] = [
     tags: ["Kotlin", "Jetpack Compose", "GPT-4 Vision", "Android"],
     links: {
       github: "#",
-      demo: "#"
+      // demo: "#"
     },
     featured: false
   },
@@ -35,7 +35,7 @@ export const projects: Project[] = [
     description: "Built for Goldpac Group, implemented front-end service using Vue.js and FastAPI. Contributed to genetic algorithm design and RESTful APIs.",
     tags: ["Vue.js", "FastAPI", "ArcoDesign"],
     links: {
-      github: "#"
+      // github: "#"
     },
     featured: false
   }
