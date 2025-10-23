@@ -1,7 +1,6 @@
 # peylix.github.io
-Personal page.
 
-This is the source code for my personal website hosted at [sichen.peylix.top](sichen.peylix.top).
+This is the source code for my personal website hosted at [sichen.peylix.top](https://sichen.peylix.top/).
 
 ## Technologies Used
 - Bun (for development and building)
