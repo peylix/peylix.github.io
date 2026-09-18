@@ -2,39 +2,38 @@ import type { Experience } from '../types';
 
 export const experience: Experience[] = [
   {
-    title: "Co-founder & Lead AI Engineer",
+    title: "Co-founder & AI Engineer",
     organization: "Shawarma Tech",
-    period: "August 2025 - Present",
-    description: "Co-founded a startup focused on AI-powered study abroad consulting services. Leading the development of AI-driven solutions to enhance user experience and streamline operations."
+    location: "Beijing, China",
+    period: "Jul 2025 - Present",
+    description: "Conceived and built Saga, an LLM-based platform that helps university applicants identify strengths in their experiences and draft or refine personal statements. Also responsible for DevOps and performance optimization."
   },
   {
-    title: "AI Engineer",
+    title: "AI Application Engineer",
     organization: "Carbon Era",
-    period: "October 2024 - Present",
-    description: "Leading AI-driven services development including Graph-based RAG chatbot and carbon neutrality report generation. Co-developing web front-end with React/Next.js and implementing CI/CD pipelines."
-  },
-  {
-    title: "Research Assistant",
-    organization: "University College Dublin",
-    period: "December 2024 - February 2025",
-    description: "Designed and implemented RAG-based mental health report generation module with CNN-based facial emotion recognition. Enhanced RAG pipeline with LLM preprocessing techniques."
-  },
-  {
-    title: "Undergraduate Researcher",
-    organization: "Beijing University of Technology",
-    period: "January 2024 - Present",
-    description: "Co-designing LLM-based fuzzing framework for deep learning libraries. Developing error-triggering data collection, automatic labeling, and differential testing methods."
+    location: "Remote",
+    period: "Oct 2024 - Apr 2025",
+    description: "Led development of AI services: a Graph-RAG carbon-trading consultation chatbot and an agentic system that generates enterprise carbon-neutrality reports. Built the React/Next.js frontends and CI/CD pipelines, working with environmental-engineering and economics researchers to turn domain expertise into product features."
   },
   {
     title: "Product Assistant Intern",
     organization: "Beijing Urban Construction Intelligent Control Co., Ltd.",
-    period: "July 2024 - October 2024",
-    description: "Conducted technical research on low-code platforms and big data processing. Contributed to RAG project for enhancing LLM generation accuracy."
+    location: "Beijing, China",
+    period: "Jul 2024 - Oct 2024",
+    description: "Conducted technical research on low-code platforms and big data processing. Contributed to a RAG project for enhancing LLM generation accuracy."
   },
   {
     title: "Undergraduate Teaching Assistant",
-    organization: "Beijing-Dublin International College, BJUT",
-    period: "March 2024 - June 2025",
-    description: "TA for COMP2003J Data Structures & Algorithms II, COMP2004J Database Systems, COMP3013J Object-Oriented Design, COMP3030J Software Engineering Project, and COMP3033J Computer Graphics."
+    organization: "Beijing-Dublin International College, Beijing University of Technology",
+    location: "Beijing, China",
+    period: "Mar 2024 - Jun 2025",
+    description: "TA for Data Structures & Algorithms II, Database & Information Systems, Object-Oriented Design, and Software Engineering Project: ran labs and study groups, gave demonstrations, and supported module coordinators with student guidance."
+  },
+  {
+    title: "Frontend Software Engineer (Research-Industry Collaboration)",
+    organization: "Beijing University of Technology & Goldpac Group",
+    location: "Beijing, China",
+    period: "Sep 2023 - Apr 2024",
+    description: "Built an intelligent panel-optimization system that automates card-layout arrangement: co-designed the configuration schema, REST APIs, and genetic-algorithm optimizer, and implemented the Vue.js front end and FastAPI layer. Provided post-launch support (fixed 15+ bugs, wrote 20+ unit tests); the work led to a filed patent."
   }
 ];

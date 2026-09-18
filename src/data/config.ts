@@ -11,6 +11,16 @@ export const sectionConfig: SectionConfig[] = [
     label: 'About'
   },
   {
+    id: 'education',
+    enabled: true,
+    label: 'Education'
+  },
+  {
+    id: 'research',
+    enabled: true,
+    label: 'Research'
+  },
+  {
     id: 'publications',
     enabled: true,
     label: 'Publications'
@@ -26,6 +36,11 @@ export const sectionConfig: SectionConfig[] = [
     label: 'Experience'
   },
   {
+    id: 'skills',
+    enabled: true,
+    label: 'Skills'
+  },
+  {
     id: 'awards',
     enabled: true,
     label: 'Awards'
@@ -39,4 +54,11 @@ export const getEnabledSections = (): string[] => {
   return sectionConfig
     .filter(section => section.enabled)
     .map(section => section.id);
+};
+
+/**
+ * get enabled sections with their nav labels
+ */
+export const getEnabledSectionConfigs = (): SectionConfig[] => {
+  return sectionConfig.filter(section => section.enabled);
 };

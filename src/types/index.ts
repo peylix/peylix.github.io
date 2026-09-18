@@ -12,9 +12,28 @@ export interface ProfileData {
   };
 }
 
+export interface Education {
+  degree: string;
+  institution: string;
+  department: string;
+  location: string;
+  period: string;
+  details: string;
+}
+
+export interface Research {
+  title: string;
+  role: string;
+  organization: string;
+  advisor: string;
+  period: string;
+  highlights: string[];
+}
+
 export interface Project {
   title: string;
   description: string;
+  period?: string;
   tags: string[];
   links: {
     github?: string;
@@ -26,8 +45,14 @@ export interface Project {
 export interface Experience {
   title: string;
   organization: string;
+  location?: string;
   period: string;
   description: string;
+}
+
+export interface SkillGroup {
+  category: string;
+  items: string[];
 }
 
 export interface Award {

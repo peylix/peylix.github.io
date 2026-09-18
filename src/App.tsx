@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect} from '@tabler/icons-react';
+import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect, IconSchool, IconFlask} from '@tabler/icons-react';
 import { profileData } from './data/profile';
+import { education } from './data/education';
+import { research } from './data/research';
 import { publications } from './data/publications';
 import { projects } from './data/projects';
 import { experience } from './data/experience';
+import { skills } from './data/skills';
 import { awards } from './data/awards';
-import { getEnabledSections } from './data/config';
+import { getEnabledSections, getEnabledSectionConfigs } from './data/config';
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('about');
@@ -13,6 +16,7 @@ export default function Portfolio() {
 
   // Get only enabled sections from config
   const sections = getEnabledSections();
+  const navSections = getEnabledSectionConfigs();
 
 
   const scrollToSection = (section: string) => {
@@ -25,22 +29,22 @@ export default function Portfolio() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <span className="text-lg font-semibold text-slate-900 dark:text-white">
+          <div className="flex justify-between items-center h-16 gap-6">
+            <span className="text-lg font-semibold text-slate-900 dark:text-white shrink-0">
               {profileData.name}
             </span>
-            <div className="hidden md:flex space-x-8">
-              {sections.map((section) => (
+            <div className="hidden md:flex items-center gap-x-4 lg:gap-x-8 overflow-x-auto">
+              {navSections.map((section) => (
                 <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`capitalize text-sm font-medium transition-colors ${
-                    activeSection === section
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={`whitespace-nowrap text-sm font-medium transition-colors ${
+                    activeSection === section.id
                       ? 'text-blue-600 dark:text-blue-400'
                       : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                   }`}
                 >
-                  {section}
+                  {section.label}
                 </button>
               ))}
             </div>
@@ -121,6 +125,87 @@ export default function Portfolio() {
         </section>
       )}
 
+      {/* Education Section */}
+      {sections.includes('education') && (
+      <section id="education" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Education</h2>
+          <div className="space-y-6">
+            {education.map((edu, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start gap-4">
+                  <IconSchool className="w-5 h-5 mt-1 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                        {edu.institution}
+                      </h3>
+                      <span className="text-sm text-slate-500 dark:text-slate-500 sm:text-right">
+                        {edu.period}
+                      </span>
+                    </div>
+                    <p className="text-slate-700 dark:text-slate-300 mb-1">{edu.degree}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                      {edu.department} • {edu.location}
+                    </p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{edu.details}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
+
+      {/* Research Section */}
+      {sections.includes('research') && (
+      <section id="research" className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Research</h2>
+          <div className="space-y-6">
+            {research.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start gap-4">
+                  <IconFlask className="w-5 h-5 mt-1 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-2">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                        {item.title}
+                      </h3>
+                      <span className="text-sm text-slate-500 dark:text-slate-500 whitespace-nowrap sm:text-right">
+                        {item.period}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+                      {item.role} • {item.organization}
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-500 mb-4">
+                      Advisor: {item.advisor}
+                    </p>
+                    <ul className="space-y-2">
+                      {item.highlights.map((highlight, i) => (
+                        <li key={i} className="flex gap-2 text-slate-600 dark:text-slate-400">
+                          <span className="text-blue-600 dark:text-blue-400 flex-shrink-0">•</span>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
+
       {/* Publications Section */}
       {sections.includes('publications') && (
       <section id="publications" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
@@ -186,16 +271,19 @@ export default function Portfolio() {
                   key={index}
                   className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-start justify-between gap-4 mb-2">
                     <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                       {project.title}
                     </h3>
                     {project.featured && (
-                      <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 rounded">
+                      <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 rounded flex-shrink-0">
                         Featured
                       </span>
                     )}
                   </div>
+                  {project.period && (
+                    <p className="text-sm text-slate-500 dark:text-slate-500 mb-3">{project.period}</p>
+                  )}
                   <p className="text-slate-600 dark:text-slate-400 mb-4">{project.description}</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag) => (
@@ -250,6 +338,7 @@ export default function Portfolio() {
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
                     {exp.organization} • {exp.period}
+                    {exp.location && ` • ${exp.location}`}
                   </p>
                   <p className="text-slate-600 dark:text-slate-400">{exp.description}</p>
                 </div>
@@ -260,9 +349,40 @@ export default function Portfolio() {
       </section>
       )}
 
+      {/* Skills Section */}
+      {sections.includes('skills') && (
+      <section id="skills" className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Skills</h2>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {skills.map((group, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-3">
+                  {group.category}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((item) => (
+                    <span
+                      key={item}
+                      className="px-3 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
+
       {/* Awards Section */}
       {sections.includes('awards') && (
-      <section id="awards" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="awards" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Awards & Achievements</h2>
           <div className="grid gap-4">

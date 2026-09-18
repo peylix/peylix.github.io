@@ -2,20 +2,20 @@ import type { Award } from '../types';
 
 export const awards: Award[] = [
   {
-    title: "Academic Excellence Award",
-    description: "Beijing University of Technology (2023-2024)"
+    title: "Academic Excellence Award, 2023-2024",
+    description: "Beijing University of Technology (Oct 2024)"
   },
   {
-    title: "Datawhale Excellence Award & Third Prize",
-    description: "CardioRAG Project (Top 10%)"
+    title: "Excellence Award (Top 10%) and Third Prize",
+    description: "Datawhale, for CardioRAG (Sep 2024)"
   },
   {
-    title: "Third Prize",
-    description: "China Collegiate Computer Design Contest, Beijing Regional"
+    title: "Third Prize, China Collegiate Computer Design Contest (Beijing Region)",
+    description: "CCDC Organizing Committee (May 2024)"
   },
   {
-    title: "Third Prize",
-    description: "17th National College Student Software Innovation Competition"
+    title: "Third Prize, 17th National College Student Software Innovation Competition (North China)",
+    description: "Pilot Software Engineering Schools Association (Apr 2024)"
   },
   {
     title: "Champion",
