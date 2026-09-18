@@ -15,6 +15,6 @@ export const skills: SkillGroup[] = [
   },
   {
     category: "Languages",
-    items: ["English (TOEFL 102)", "Mandarin Chinese (native)"]
+    items: ["English", "Mandarin Chinese"]
   }
 ];

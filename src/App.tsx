@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect, IconSchool, IconFlask} from '@tabler/icons-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect, IconSchool, IconFlask, IconAward, IconMenu2, IconX} from '@tabler/icons-react';
 import { profileData } from './data/profile';
 import { education } from './data/education';
 import { research } from './data/research';
@@ -10,17 +10,85 @@ import { skills } from './data/skills';
 import { awards } from './data/awards';
 import { getEnabledSections, getEnabledSectionConfigs } from './data/config';
 
+// Link keys and publication types are rendered from object keys, so spell out
+// the labels that title-casing alone would get wrong (e.g. "Github").
+const linkLabels: Record<string, string> = {
+  github: 'GitHub',
+  demo: 'Demo',
+  paper: 'Paper',
+  patent: 'Patent',
+  status: 'Status'
+};
+
+const publicationTypeLabels: Record<string, string> = {
+  conference: 'Conference',
+  journal: 'Journal',
+  patent: 'Patent'
+};
+
+const labelFor = (key: string) => linkLabels[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
+
 export default function Portfolio() {
-  const [activeSection, setActiveSection] = useState('about');
+  // Config is static, so memoise to keep these arrays stable across renders.
+  const sections = useMemo(() => getEnabledSections(), []);
+  const navSections = useMemo(() => getEnabledSectionConfigs(), []);
+
+  const [activeSection, setActiveSection] = useState(sections[0] ?? 'about');
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Get only enabled sections from config
-  const sections = getEnabledSections();
-  const navSections = getEnabledSectionConfigs();
+  // While a click-triggered smooth scroll is in flight the clicked section stays
+  // active, otherwise the highlight flickers through every section on the way.
+  const clickScrolling = useRef(false);
+  const clickTimer = useRef<number | undefined>(undefined);
 
+  // Keep the nav highlight in sync with manual scrolling.
+  useEffect(() => {
+    const syncActiveSection = () => {
+      if (clickScrolling.current) return;
+
+      // A section counts as active once its top passes just under the nav.
+      const line = 80;
+      let current = sections[0];
+      for (const id of sections) {
+        const element = document.getElementById(id);
+        if (element && element.getBoundingClientRect().top <= line) {
+          current = id;
+        }
+      }
+
+      // The final section can be too short to ever reach the line, so let the
+      // bottom of the page select it.
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) {
+        current = sections[sections.length - 1];
+      }
+
+      setActiveSection(current);
+    };
+
+    syncActiveSection();
+    window.addEventListener('scroll', syncActiveSection, { passive: true });
+    window.addEventListener('resize', syncActiveSection);
+    return () => {
+      window.removeEventListener('scroll', syncActiveSection);
+      window.removeEventListener('resize', syncActiveSection);
+    };
+  }, [sections]);
+
+  useEffect(() => () => window.clearTimeout(clickTimer.current), []);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
+    setMenuOpen(false);
+
+    clickScrolling.current = true;
+    window.clearTimeout(clickTimer.current);
+    clickTimer.current = window.setTimeout(() => {
+      clickScrolling.current = false;
+    }, 700);
+
     document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -48,12 +116,39 @@ export default function Portfolio() {
                 </button>
               ))}
             </div>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden p-2 -mr-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <IconX className="w-5 h-5" /> : <IconMenu2 className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+        {menuOpen && (
+          // Overlaid rather than in flow: an expanding nav would shift the page
+          // under the smooth scroll started by tapping an entry.
+          <div className="md:hidden absolute top-full left-0 right-0 py-2 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg">
+            {navSections.map((section) => (
+              <button
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className={`block w-full text-left px-4 sm:px-6 py-2.5 text-sm font-medium transition-colors ${
+                  activeSection === section.id
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                }`}
+              >
+                {section.label}
+              </button>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="pt-16 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             <img
@@ -88,6 +183,8 @@ export default function Portfolio() {
               <div className="flex gap-4 justify-center md:justify-start">
                 <a
                   href={profileData.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                   aria-label="GitHub"
                 >
@@ -95,6 +192,8 @@ export default function Portfolio() {
                 </a>
                 <a
                   href={profileData.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                   aria-label="LinkedIn"
                 >
@@ -115,9 +214,9 @@ export default function Portfolio() {
 
       {/* About Section */}
       {sections.includes('about') && (
-        <section id="about" className="py-16 px-4 sm:px-6 lg:px-8">
+        <section id="about" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">About</h2>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">About</h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
               {profileData.bio}
             </p>
@@ -127,33 +226,29 @@ export default function Portfolio() {
 
       {/* Education Section */}
       {sections.includes('education') && (
-      <section id="education" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
+      <section id="education" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Education</h2>
-          <div className="space-y-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Education</h2>
+          <div className="grid gap-5 sm:grid-cols-2 items-start">
             {education.map((edu, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+                className="bg-white dark:bg-slate-800 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start gap-4">
-                  <IconSchool className="w-5 h-5 mt-1 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                  <div className="flex-1">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
-                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                        {edu.institution}
-                      </h3>
-                      <span className="text-sm text-slate-500 dark:text-slate-500 sm:text-right">
-                        {edu.period}
-                      </span>
-                    </div>
-                    <p className="text-slate-700 dark:text-slate-300 mb-1">{edu.degree}</p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                      {edu.department} • {edu.location}
-                    </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{edu.details}</p>
-                  </div>
+                <div className="flex items-center gap-2 mb-3">
+                  <IconSchool className="w-5 h-5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    {edu.institution}
+                  </h3>
                 </div>
+                <p className="text-slate-700 dark:text-slate-300">{edu.degree}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">{edu.period}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                  {edu.department} • {edu.location}
+                </p>
+                {edu.details && (
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">{edu.details}</p>
+                )}
               </div>
             ))}
           </div>
@@ -163,10 +258,10 @@ export default function Portfolio() {
 
       {/* Research Section */}
       {sections.includes('research') && (
-      <section id="research" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="research" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Research</h2>
-          <div className="space-y-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Research</h2>
+          <div className="space-y-5">
             {research.map((item, index) => (
               <div
                 key={index}
@@ -208,62 +303,64 @@ export default function Portfolio() {
 
       {/* Publications Section */}
       {sections.includes('publications') && (
-      <section id="publications" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
+      <section id="publications" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Publications</h2>
-          <div className="space-y-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Publications</h2>
+          <ol className="border-y border-slate-200 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-800">
             {publications.map((pub, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+              <li key={index} className="flex gap-4 py-5">
+                <span className="pt-0.5 text-sm font-medium tabular-nums text-slate-400 dark:text-slate-600">
+                  [{index + 1}]
+                </span>
+                <div className="flex-1">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">
                       {pub.title}
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{pub.authors}</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-500">
-                      <span className="font-medium">{pub.venue}</span> • {pub.year}
-                    </p>
-                  </div>
-                  <span
-                    className={`px-3 py-1 text-xs font-medium rounded-full ${
-                      pub.type === 'journal'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                        : pub.type === 'patent'
-                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
-                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-                    }`}
-                  >
-                    {pub.type}
-                  </span>
-                </div>
-                <div className="flex gap-4 mt-4">
-                  {Object.entries(pub.links).map(([key, url]) => (
-                    <a
-                      key={key}
-                      href={url}
-                      className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                    <span
+                      className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap ${
+                        pub.type === 'journal'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                          : pub.type === 'patent'
+                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                      }`}
                     >
-                      <IconExternalLink className="w-3 h-3" />
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </a>
-                  ))}
+                      {publicationTypeLabels[pub.type] ?? pub.type}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{pub.authors}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+                    <span className="font-medium">{pub.venue}</span> • {pub.year}
+                  </p>
+                  <div className="flex gap-4 mt-2">
+                    {Object.entries(pub.links).map(([key, url]) => (
+                      <a
+                        key={key}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        <IconExternalLink className="w-3 h-3" />
+                        {labelFor(key)}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
       )}
 
       {/* Projects Section */}
       {sections.includes('projects') && (
-      <section id="projects" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="projects" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Projects</h2>
-          <div className="grid gap-6 mb-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Projects</h2>
+          <div className="grid gap-5 mb-6">
             {projects
               .filter((project) => showAllProjects || project.featured)
               .map((project, index) => (
@@ -300,10 +397,12 @@ export default function Portfolio() {
                       <a
                         key={key}
                         href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
                       >
                         <IconExternalLink className="w-3 h-3" />
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                        {labelFor(key)}
                       </a>
                     ))}
                   </div>
@@ -325,10 +424,10 @@ export default function Portfolio() {
 
       {/* Experience Section */}
       {sections.includes('experience') && (
-      <section id="experience" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
+      <section id="experience" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Experience</h2>
-          <div className="space-y-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Experience</h2>
+          <div className="space-y-5">
             {experience.map((exp, index) => (
               <div key={index} className="flex gap-4">
                 <div className="flex-shrink-0 w-3 h-3 mt-2 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
@@ -351,47 +450,48 @@ export default function Portfolio() {
 
       {/* Skills Section */}
       {sections.includes('skills') && (
-      <section id="skills" className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="skills" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Skills</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Skills</h2>
+          <dl className="border-y border-slate-200 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-800">
             {skills.map((group, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-3">
+              <div key={index} className="py-4 sm:flex sm:gap-6">
+                <dt className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:mb-0 sm:w-44 sm:flex-shrink-0 sm:pt-1">
                   {group.category}
-                </h3>
-                <div className="flex flex-wrap gap-2">
+                </dt>
+                <dd className="flex flex-wrap gap-2">
                   {group.items.map((item) => (
                     <span
                       key={item}
-                      className="px-3 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full"
+                      className="px-3 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full"
                     >
                       {item}
                     </span>
                   ))}
-                </div>
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         </div>
       </section>
       )}
 
       {/* Awards Section */}
       {sections.includes('awards') && (
-      <section id="awards" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
+      <section id="awards" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Awards & Achievements</h2>
-          <div className="grid gap-4">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Awards & Achievements</h2>
+          <div className="grid gap-3 sm:grid-cols-2 items-start">
             {awards.map((award, index) => (
-              <div key={index} className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full flex-shrink-0"></div>
-                <p className="text-slate-700 dark:text-slate-300">
-                  <span className="font-medium">{award.title}</span> • {award.description}
-                </p>
+              <div
+                key={index}
+                className="flex items-start gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm"
+              >
+                <IconAward className="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500" />
+                <div>
+                  <p className="text-sm font-medium text-slate-900 dark:text-white">{award.title}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">{award.description}</p>
+                </div>
               </div>
             ))}
           </div>
