@@ -1,8 +1,10 @@
 # Personal Website
 
-This is the source code for my personal website hosted at [sichen.peylix.top](https://sichen.peylix.top/).
+This is the source code for my personal website.
 
-## Technologies Used
+You can visit it at [sichen.peylix.top](https://sichen.peylix.top/).
+
+## Tech Stack
 - Bun (for development and building)
 - TypeScript
 - Vite (for bundling)
@@ -22,4 +24,3 @@ To build the project for production, use:
 bun build
 ```
 The built files will be located in the `dist` directory.
-
