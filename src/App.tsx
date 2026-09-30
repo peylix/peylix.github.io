@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {IconBrandGithub, IconBrandLinkedin, IconMail, IconExternalLink, IconMapPin, IconBuildings, IconSelect, IconSchool, IconFlask, IconAward, IconMenu2, IconX} from '@tabler/icons-react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { IconBrandGithub, IconBrandLinkedin, IconArrowUpRight, IconChevronDown, IconMenu2, IconX } from '@tabler/icons-react';
 import { profileData } from './data/profile';
 import { education } from './data/education';
 import { research } from './data/research';
@@ -27,6 +27,53 @@ const publicationTypeLabels: Record<string, string> = {
 };
 
 const labelFor = (key: string) => linkLabels[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
+
+// Shared horizontal padding so every column edge lines up with the nav.
+const gutter = 'px-5 sm:px-8';
+
+function Section({ id, index, title, children }: { id: string; index: number; title: string; children: ReactNode }) {
+  return (
+    <section id={id} className="scroll-mt-14 grid border-b md:grid-cols-[14rem_1fr]">
+      <div className={`${gutter} pt-10 md:sticky md:top-14 md:self-start md:py-12`}>
+        <p className="font-mono text-xs text-accent">{String(index + 1).padStart(2, '0')}</p>
+        <h2 className="mt-1 text-lg font-semibold uppercase tracking-wide">{title}</h2>
+      </div>
+      <div className={`${gutter} pt-6 pb-10 md:border-l md:py-12`}>{children}</div>
+    </section>
+  );
+}
+
+function Meta({ children }: { children: ReactNode }) {
+  return <p className="font-mono text-xs uppercase tracking-wide text-faint">{children}</p>;
+}
+
+function Tag({ children }: { children: ReactNode }) {
+  return <span className="border px-2 py-0.5 font-mono text-[11px] text-muted">{children}</span>;
+}
+
+function Links({ links }: { links: Record<string, string | undefined> }) {
+  const entries = Object.entries(links).filter((entry): entry is [string, string] => Boolean(entry[1]));
+  if (entries.length === 0) return null;
+  return (
+    <div className="mt-4 flex gap-5">
+      {entries.map(([key, url]) => (
+        <a
+          key={key}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wide text-accent"
+        >
+          <span className="underline-offset-4 group-hover:underline">{labelFor(key)}</span>
+          <IconArrowUpRight className="h-3.5 w-3.5" stroke={1.75} />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+// A list whose rows are separated by hairlines, with no rule above the first row.
+const ruledList = 'divide-y [&>*]:py-7 [&>*:first-child]:pt-0 [&>*:last-child]:pb-0';
 
 export default function Portfolio() {
   // Config is static, so memoise to keep these arrays stable across renders.
@@ -92,419 +139,312 @@ export default function Portfolio() {
     document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Section numbers follow the enabled order, so disabling one renumbers the rest.
+  const indexOf = (id: string) => sections.indexOf(id);
+
+  const socialLinks = [
+    { href: profileData.social.github, label: 'GitHub', Icon: IconBrandGithub },
+    { href: profileData.social.linkedin, label: 'LinkedIn', Icon: IconBrandLinkedin }
+  ];
+
+  const heroFacts = [
+    { label: 'Institution', value: profileData.institution },
+    { label: 'Location', value: profileData.location },
+    {
+      label: 'Email',
+      value: (
+        <a href={`mailto:${profileData.email}`} className="break-all underline-offset-4 hover:text-accent hover:underline">
+          {profileData.email}
+        </a>
+      )
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-paper font-sans text-ink">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 gap-6">
-            <span className="text-lg font-semibold text-slate-900 dark:text-white shrink-0">
-              {profileData.name}
-            </span>
-            <div className="hidden md:flex items-center gap-x-4 lg:gap-x-8 overflow-x-auto">
-              {navSections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`whitespace-nowrap text-sm font-medium transition-colors ${
-                    activeSection === section.id
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
-                  }`}
-                >
-                  {section.label}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 -mr-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={menuOpen}
-            >
-              {menuOpen ? <IconX className="w-5 h-5" /> : <IconMenu2 className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-        {menuOpen && (
-          // Overlaid rather than in flow: an expanding nav would shift the page
-          // under the smooth scroll started by tapping an entry.
-          <div className="md:hidden absolute top-full left-0 right-0 py-2 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-lg">
+      <nav className="sticky top-0 z-50 border-b bg-paper/90 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-5xl items-stretch border-x">
+          <button
+            onClick={() => scrollToSection(sections[0])}
+            className={`${gutter} flex shrink-0 items-center text-sm font-semibold tracking-tight md:w-56 md:border-r`}
+          >
+            {profileData.name}
+          </button>
+          <div className="ml-auto hidden items-stretch overflow-x-auto lg:flex">
             {navSections.map((section) => (
               <button
                 key={section.id}
                 onClick={() => scrollToSection(section.id)}
-                className={`block w-full text-left px-4 sm:px-6 py-2.5 text-sm font-medium transition-colors ${
-                  activeSection === section.id
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800'
+                className={`whitespace-nowrap px-3 font-mono text-xs uppercase tracking-wide transition-colors ${
+                  activeSection === section.id ? 'bg-ink text-paper' : 'text-muted hover:bg-wash hover:text-ink'
                 }`}
               >
                 {section.label}
               </button>
             ))}
           </div>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="ml-auto flex w-14 items-center justify-center border-l text-muted transition-colors hover:bg-wash hover:text-ink lg:hidden"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <IconX className="h-5 w-5" stroke={1.5} /> : <IconMenu2 className="h-5 w-5" stroke={1.5} />}
+          </button>
+        </div>
+        {menuOpen && (
+          // Overlaid rather than in flow: an expanding nav would shift the page
+          // under the smooth scroll started by tapping an entry.
+          <div className="absolute left-0 right-0 top-full border-b bg-paper lg:hidden">
+            <div className="mx-auto max-w-5xl divide-y border-x">
+              {navSections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={`${gutter} flex w-full items-center gap-4 py-3 text-left font-mono text-xs uppercase tracking-wide transition-colors ${
+                    activeSection === section.id ? 'bg-ink text-paper' : 'text-muted hover:bg-wash hover:text-ink'
+                  }`}
+                >
+                  <span className="opacity-60">{String(indexOf(section.id) + 1).padStart(2, '0')}</span>
+                  {section.label}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-16 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-            <img
-              src={profileData.avatar}
-              alt={profileData.name}
-              className="w-32 h-32 rounded-full shadow-lg ring-4 ring-white dark:ring-slate-800"
-            />
-            <div className="text-center md:text-left">
-              <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
-                {profileData.name}
-              </h1>
-              <p className="text-xl text-slate-600 dark:text-slate-400 mb-4">
-                {profileData.title}
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm text-slate-600 dark:text-slate-400 mb-6">
-                <span className="flex items-center gap-1">
-                  <IconBuildings className="w-4 h-4" />
-                  {profileData.institution}
-                </span>
-                <span className="flex items-center gap-1">
-                  <IconMapPin className="w-4 h-4" />
-                  {profileData.location}
-                </span>
-                <a
-                  href={`mailto:${profileData.email}`}
-                  className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                >
-                  <IconMail className="w-4 h-4" />
-                  {profileData.email}
-                </a>
-              </div>
-              <div className="flex gap-4 justify-center md:justify-start">
-                <a
-                  href={profileData.social.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                  aria-label="GitHub"
-                >
-                  <IconBrandGithub className="w-5 h-5" />
-                </a>
-                <a
-                  href={profileData.social.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <IconBrandLinkedin className="w-5 h-5" />
-                </a>
-                {/* <a */}
-                {/*   href={profileData.social.googleScholar} */}
-                {/*   className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" */}
-                {/*   aria-label="Google Scholar" */}
-                {/* > */}
-                {/*   <IconBrandGoogle className="w-5 h-5" /> */}
-                {/* </a> */}
-              </div>
+      <main className="mx-auto max-w-5xl border-x">
+        {/* Hero Section */}
+        <header className="border-b">
+          <div className="grid md:grid-cols-[14rem_1fr]">
+            <div className={`${gutter} pt-10 md:py-12`}>
+              <img
+                src={profileData.avatar}
+                alt={profileData.name}
+                className="aspect-square w-28 border object-cover md:w-full"
+              />
+            </div>
+            <div className={`${gutter} flex flex-col justify-end pt-6 pb-10 md:border-l md:py-12`}>
+              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{profileData.name}</h1>
+              <p className="mt-3 max-w-2xl text-lg text-muted">{profileData.title}</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      {sections.includes('about') && (
-        <section id="about" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">About</h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-              {profileData.bio}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Education Section */}
-      {sections.includes('education') && (
-      <section id="education" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Education</h2>
-          <div className="grid gap-5 sm:grid-cols-2 items-start">
-            {education.map((edu, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-slate-800 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <IconSchool className="w-5 h-5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                    {edu.institution}
-                  </h3>
-                </div>
-                <p className="text-slate-700 dark:text-slate-300">{edu.degree}</p>
-                <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">{edu.period}</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-                  {edu.department} • {edu.location}
-                </p>
-                {edu.details && (
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">{edu.details}</p>
-                )}
+          <div className="grid gap-px border-t bg-line sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
+            {heroFacts.map((fact) => (
+              <div key={fact.label} className={`${gutter} bg-paper py-4`}>
+                <p className="font-mono text-[11px] uppercase tracking-wide text-faint">{fact.label}</p>
+                <p className="mt-1 text-sm">{fact.value}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-      )}
-
-      {/* Research Section */}
-      {sections.includes('research') && (
-      <section id="research" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Research</h2>
-          <div className="space-y-5">
-            {research.map((item, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start gap-4">
-                  <IconFlask className="w-5 h-5 mt-1 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                  <div className="flex-1">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-2">
-                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                        {item.title}
-                      </h3>
-                      <span className="text-sm text-slate-500 dark:text-slate-500 whitespace-nowrap sm:text-right">
-                        {item.period}
-                      </span>
-                    </div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
-                      {item.role} • {item.organization}
-                    </p>
-                    <p className="text-sm text-slate-500 dark:text-slate-500 mb-4">
-                      Advisor: {item.advisor}
-                    </p>
-                    <ul className="space-y-2">
-                      {item.highlights.map((highlight, i) => (
-                        <li key={i} className="flex gap-2 text-slate-600 dark:text-slate-400">
-                          <span className="text-blue-600 dark:text-blue-400 flex-shrink-0">•</span>
-                          <span>{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      )}
-
-      {/* Publications Section */}
-      {sections.includes('publications') && (
-      <section id="publications" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Publications</h2>
-          <ol className="border-y border-slate-200 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-800">
-            {publications.map((pub, index) => (
-              <li key={index} className="flex gap-4 py-5">
-                <span className="pt-0.5 text-sm font-medium tabular-nums text-slate-400 dark:text-slate-600">
-                  [{index + 1}]
-                </span>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="font-semibold text-slate-900 dark:text-white">
-                      {pub.title}
-                    </h3>
-                    <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap ${
-                        pub.type === 'journal'
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                          : pub.type === 'patent'
-                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
-                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-                      }`}
-                    >
-                      {publicationTypeLabels[pub.type] ?? pub.type}
-                    </span>
-                  </div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{pub.authors}</p>
-                  <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
-                    <span className="font-medium">{pub.venue}</span> • {pub.year}
-                  </p>
-                  <div className="flex gap-4 mt-2">
-                    {Object.entries(pub.links).map(([key, url]) => (
-                      <a
-                        key={key}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
-                      >
-                        <IconExternalLink className="w-3 h-3" />
-                        {labelFor(key)}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-      )}
-
-      {/* Projects Section */}
-      {sections.includes('projects') && (
-      <section id="projects" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Projects</h2>
-          <div className="grid gap-5 mb-6">
-            {projects
-              .filter((project) => showAllProjects || project.featured)
-              .map((project, index) => (
-                <div
-                  key={index}
-                  className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+            <div className="grid grid-cols-2 gap-px">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex items-center justify-center bg-paper py-4 transition-colors hover:bg-ink hover:text-paper lg:w-16"
                 >
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      {project.title}
-                    </h3>
-                    {project.featured && (
-                      <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 rounded flex-shrink-0">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  {project.period && (
-                    <p className="text-sm text-slate-500 dark:text-slate-500 mb-3">{project.period}</p>
-                  )}
-                  <p className="text-slate-600 dark:text-slate-400 mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-4">
-                    {Object.entries(project.links).map(([key, url]) => (
-                      <a
-                        key={key}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
-                      >
-                        <IconExternalLink className="w-3 h-3" />
-                        {labelFor(key)}
-                      </a>
-                    ))}
-                  </div>
+                  <Icon className="h-5 w-5" stroke={1.5} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </header>
+
+        {/* About Section */}
+        {sections.includes('about') && (
+          <Section id="about" index={indexOf('about')} title="About">
+            <p className="max-w-3xl text-lg leading-relaxed">{profileData.bio}</p>
+          </Section>
+        )}
+
+        {/* Education Section */}
+        {sections.includes('education') && (
+          <Section id="education" index={indexOf('education')} title="Education">
+            <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+              {education.map((edu, index) => (
+                <div key={index}>
+                  <Meta>{edu.period}</Meta>
+                  <h3 className="mt-3 text-lg font-semibold tracking-tight">{edu.institution}</h3>
+                  <p className="mt-1">{edu.degree}</p>
+                  <p className="mt-3 text-sm text-muted">
+                    {edu.department} · {edu.location}
+                  </p>
+                  {edu.details && <p className="mt-2 text-sm text-muted">{edu.details}</p>}
                 </div>
               ))}
-          </div>
-          {projects.length > projects.filter((p) => p.featured).length && (
-            <button
-              onClick={() => setShowAllProjects(!showAllProjects)}
-              className="flex items-center gap-2 mx-auto text-sm text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              {showAllProjects ? 'Show Less' : 'Show All Projects'}
-              <IconSelect className={`w-4 h-4 transition-transform ${showAllProjects ? 'rotate-180' : ''}`} />
-            </button>
-          )}
-        </div>
-      </section>
-      )}
+            </div>
+          </Section>
+        )}
 
-      {/* Experience Section */}
-      {sections.includes('experience') && (
-      <section id="experience" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Experience</h2>
-          <div className="space-y-5">
-            {experience.map((exp, index) => (
-              <div key={index} className="flex gap-4">
-                <div className="flex-shrink-0 w-3 h-3 mt-2 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                    {exp.title}
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                    {exp.organization} • {exp.period}
-                    {exp.location && ` • ${exp.location}`}
-                  </p>
-                  <p className="text-slate-600 dark:text-slate-400">{exp.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      )}
+        {/* Research Section */}
+        {sections.includes('research') && (
+          <Section id="research" index={indexOf('research')} title="Research">
+            <div className={ruledList}>
+              {research.map((item, index) => (
+                <article key={index}>
+                  <Meta>
+                    {item.period} · {item.role}
+                  </Meta>
+                  <h3 className="mt-2 text-lg font-semibold tracking-tight">{item.title}</h3>
+                  <p className="mt-1 text-sm text-muted">{item.organization}</p>
+                  <p className="text-sm text-muted">Supervisor: {item.advisor}</p>
+                  <ul className="mt-4 space-y-2">
+                    {item.highlights.map((highlight, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="mt-2.5 h-1 w-1 shrink-0 bg-accent" />
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </Section>
+        )}
 
-      {/* Skills Section */}
-      {sections.includes('skills') && (
-      <section id="skills" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Skills</h2>
-          <dl className="border-y border-slate-200 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-800">
-            {skills.map((group, index) => (
-              <div key={index} className="py-4 sm:flex sm:gap-6">
-                <dt className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:mb-0 sm:w-44 sm:flex-shrink-0 sm:pt-1">
-                  {group.category}
-                </dt>
-                <dd className="flex flex-wrap gap-2">
-                  {group.items.map((item) => (
-                    <span
-                      key={item}
-                      className="px-3 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-      )}
+        {/* Publications Section */}
+        {sections.includes('publications') && (
+          <Section id="publications" index={indexOf('publications')} title="Publications">
+            <ol className={ruledList}>
+              {publications.map((pub, index) => (
+                <li key={index} className="flex gap-4">
+                  <span className="pt-1 font-mono text-xs tabular-nums text-faint">
+                    [{String(index + 1).padStart(2, '0')}]
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="font-semibold tracking-tight">{pub.title}</h3>
+                      <span
+                        className={`shrink-0 border px-2 py-0.5 font-mono text-[11px] uppercase tracking-wide ${
+                          pub.type === 'patent' ? 'text-muted' : 'border-accent text-accent'
+                        }`}
+                      >
+                        {publicationTypeLabels[pub.type] ?? pub.type}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-muted">{pub.authors}</p>
+                    <p className="mt-1 text-sm text-muted">
+                      <span className="text-ink">{pub.venue}</span> · {pub.year}
+                    </p>
+                    <Links links={pub.links} />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Section>
+        )}
 
-      {/* Awards Section */}
-      {sections.includes('awards') && (
-      <section id="awards" className="scroll-mt-8 py-14 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Awards & Achievements</h2>
-          <div className="grid gap-3 sm:grid-cols-2 items-start">
-            {awards.map((award, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm"
+        {/* Projects Section */}
+        {sections.includes('projects') && (
+          <Section id="projects" index={indexOf('projects')} title="Projects">
+            <div className={ruledList}>
+              {projects
+                .filter((project) => showAllProjects || project.featured)
+                .map((project, index) => (
+                  <article key={index}>
+                    <div className="flex items-center justify-between gap-4">
+                      <Meta>{project.period}</Meta>
+                      {project.featured && (
+                        <span className="bg-ink px-2 py-0.5 font-mono text-[11px] uppercase tracking-wide text-paper">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-2 text-lg font-semibold tracking-tight">{project.title}</h3>
+                    <p className="mt-2 text-muted">{project.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {project.tags.map((tag) => (
+                        <Tag key={tag}>{tag}</Tag>
+                      ))}
+                    </div>
+                    <Links links={project.links} />
+                  </article>
+                ))}
+            </div>
+            {projects.length > projects.filter((p) => p.featured).length && (
+              <button
+                onClick={() => setShowAllProjects(!showAllProjects)}
+                className="mt-8 flex w-full items-center justify-center gap-2 border py-3 font-mono text-xs uppercase tracking-wide transition-colors hover:bg-ink hover:text-paper"
               >
-                <IconAward className="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500" />
-                <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">{award.title}</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{award.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      )}
+                {showAllProjects ? 'Show less' : `Show all ${projects.length} projects`}
+                <IconChevronDown
+                  className={`h-4 w-4 transition-transform ${showAllProjects ? 'rotate-180' : ''}`}
+                  stroke={1.5}
+                />
+              </button>
+            )}
+          </Section>
+        )}
 
-      {/* Footer */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-200 dark:border-slate-800">
-        <div className="max-w-4xl mx-auto text-center text-sm text-slate-600 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} {profileData.name}.</p>
-        </div>
-      </footer>
+        {/* Experience Section */}
+        {sections.includes('experience') && (
+          <Section id="experience" index={indexOf('experience')} title="Experience">
+            <div className={ruledList}>
+              {experience.map((exp, index) => (
+                <article key={index}>
+                  <Meta>
+                    {exp.period}
+                    {exp.location && ` · ${exp.location}`}
+                  </Meta>
+                  <h3 className="mt-2 text-lg font-semibold tracking-tight">{exp.title}</h3>
+                  <p className="mt-1 text-sm text-muted">{exp.organization}</p>
+                  <p className="mt-3 text-muted">{exp.description}</p>
+                </article>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* Skills Section */}
+        {sections.includes('skills') && (
+          <Section id="skills" index={indexOf('skills')} title="Skills">
+            <dl className="space-y-5">
+              {skills.map((group, index) => (
+                <div key={index} className="sm:flex sm:gap-6">
+                  <dt className="mb-2 font-mono text-xs uppercase tracking-wide text-faint sm:mb-0 sm:w-40 sm:shrink-0 sm:pt-1">
+                    {group.category}
+                  </dt>
+                  <dd className="flex flex-wrap gap-1.5">
+                    {group.items.map((item) => (
+                      <Tag key={item}>{item}</Tag>
+                    ))}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Section>
+        )}
+
+        {/* Awards Section */}
+        {sections.includes('awards') && (
+          <Section id="awards" index={indexOf('awards')} title="Awards & Achievements">
+            <ul className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+              {awards.map((award, index) => (
+                <li key={index}>
+                  <span className="block h-0.5 w-6 bg-accent" />
+                  <p className="mt-3 font-medium leading-snug">{award.title}</p>
+                  <p className="mt-1 text-sm text-muted">{award.description}</p>
+                </li>
+              ))}
+            </ul>
+          </Section>
+        )}
+
+        {/* Footer */}
+        <footer className={`${gutter} flex items-center justify-between py-6 font-mono text-xs uppercase tracking-wide text-faint`}>
+          <p>
+            © {new Date().getFullYear()} {profileData.name}
+          </p>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="uppercase hover:text-ink">
+            Top ↑
+          </button>
+        </footer>
+      </main>
     </div>
   );
 }

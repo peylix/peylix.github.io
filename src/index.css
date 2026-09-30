@@ -1,1 +1,63 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Palette tokens, swapped wholesale for dark mode below. */
+:root {
+  --paper: #ffffff;
+  --wash: #f5f5f4;
+  --ink: #0a0a0a;
+  --muted: #525252;
+  --faint: #8a8a8a;
+  --line: #e5e5e5;
+  --accent: #1f4dff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0a0a0a;
+    --wash: #161616;
+    --ink: #f5f5f5;
+    --muted: #a3a3a3;
+    --faint: #6b6b6b;
+    --line: #262626;
+    --accent: #6e8bff;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-wash: var(--wash);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+}
+
+@layer base {
+  /* Tailwind v4 borders default to currentColor; every rule here is a hairline. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-line);
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
+}
