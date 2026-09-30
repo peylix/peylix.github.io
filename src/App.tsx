@@ -31,6 +31,8 @@ const labelFor = (key: string) => linkLabels[key] ?? key.charAt(0).toUpperCase()
 // Shared horizontal padding so every column edge lines up with the nav.
 const gutter = 'px-5 sm:px-8';
 
+const currentYear = new Date().getFullYear();
+
 function Section({ id, index, title, children }: { id: string; index: number; title: string; children: ReactNode }) {
   return (
     <section id={id} className="scroll-mt-14 grid border-b md:grid-cols-[14rem_1fr]">
@@ -438,7 +440,7 @@ export default function Portfolio() {
         {/* Footer */}
         <footer className={`${gutter} flex items-center justify-between py-6 font-mono text-xs uppercase tracking-wide text-faint`}>
           <p>
-            © {new Date().getFullYear()} {profileData.name}
+            © {currentYear} {profileData.name}
           </p>
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="uppercase hover:text-ink">
             Top ↑
